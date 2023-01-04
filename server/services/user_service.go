@@ -29,7 +29,7 @@ func (s *UserService) SignUp(username, password string) (*models.User, error) {
 	return u, nil
 }
 
-func NewUserServer(repo repositories.User) *UserService {
+func NewUserServer(repo repositories.User) User {
 	return &UserService{
 		repo: repo,
 	}
