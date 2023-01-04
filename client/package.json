@@ -21,10 +21,12 @@
     ]
   },
   "dependencies": {
+    "@types/uuid": "^9.0.0",
     "axios": "^1.2.2",
     "preact": "^10.10.0",
     "preact-render-to-string": "^5.2.1",
     "preact-router": "^3.2.1",
+    "react-qr-code": "^2.0.11",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
