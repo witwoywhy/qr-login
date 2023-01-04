@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"qr-login/services"
+	"strings"
 
 	"github.com/labstack/echo/v4"
+	"golang.org/x/net/websocket"
 )
 
 type UserHandler struct {
@@ -59,6 +62,34 @@ func (h *UserHandler) Login(c echo.Context) error {
 		"ok":     true,
 		"result": res,
 	})
+}
+
+func (h *UserHandler) WS(c echo.Context) error {
+	websocket.Handler(func(ws *websocket.Conn) {
+		defer ws.Close()
+		for {
+			var msg string
+			err := websocket.Message.Receive(ws, &msg)
+			if err != nil {
+				if err.Error() == "EOF" {
+					log.Println("close connection")
+					h.serv.DeleteConnByWS(ws)
+					ws.Close()
+					return
+				}
+			}
+
+			s := strings.Split(msg, "|")
+			cmd := s[0]
+			switch cmd {
+			case "login:uuid":
+				v := s[1]
+				h.serv.StoreConn(ws, v)
+			}
+		}
+	}).ServeHTTP(c.Response(), c.Request())
+
+	return nil
 }
 
 func NewUserHandler(serv services.User) *UserHandler {

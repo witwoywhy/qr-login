@@ -4,10 +4,39 @@ import (
 	"qr-login/errs"
 	"qr-login/models"
 	"qr-login/repositories"
+	"sync"
+
+	"golang.org/x/net/websocket"
 )
 
 type UserService struct {
 	repo repositories.User
+
+	uuid map[string]*websocket.Conn
+	ws   map[*websocket.Conn]string
+
+	mu sync.Mutex
+}
+
+func (s *UserService) DeleteConnByWS(ws *websocket.Conn) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	uuid, ok := s.ws[ws]
+	if !ok {
+		return
+	}
+
+	delete(s.ws, ws)
+	delete(s.uuid, uuid)
+}
+
+func (s *UserService) StoreConn(ws *websocket.Conn, uuid string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.uuid[uuid] = ws
+	s.ws[ws] = uuid
 }
 
 func (s *UserService) Login(username, password string) (*models.User, error) {
@@ -45,5 +74,8 @@ func (s *UserService) SignUp(username, password string) (*models.User, error) {
 func NewUserServer(repo repositories.User) User {
 	return &UserService{
 		repo: repo,
+		mu:   sync.Mutex{},
+		uuid: make(map[string]*websocket.Conn),
+		ws:   make(map[*websocket.Conn]string),
 	}
 }
