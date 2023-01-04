@@ -11,6 +11,16 @@ type UserRepositoryBuffer struct {
 	h map[string]models.User
 }
 
+// FindByID implements User
+func (r *UserRepositoryBuffer) FindByID(id string) *models.User {
+	v, ok := r.h[id]
+	if ok {
+		return &v
+	}
+
+	return nil
+}
+
 // FindByUsername implements User
 func (r *UserRepositoryBuffer) FindByUsername(username string) *models.User {
 	v, ok := r.h[username]
@@ -27,6 +37,7 @@ func (r *UserRepositoryBuffer) Create(u *models.User) (*models.User, error) {
 
 	r.u = append(r.u, *u)
 	r.h[u.Username] = *u
+	r.h[u.ID.String()] = *u
 
 	return u, nil
 }
