@@ -17,7 +17,7 @@ func main() {
 
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:8080"},
+		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodPost},
 	}))
 	e.POST("/user", userHanler.SignUp)
