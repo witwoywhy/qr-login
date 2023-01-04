@@ -52,6 +52,18 @@ const Login = () => {
   }
 
   ws.onmessage = (e) => {
+    if (e.data) {
+      const [cmd, data] = e.data.split(":")
+      switch (cmd) {
+        case "login": {
+          const [id, username] = data.split("|")
+          localStorage.setItem('user', JSON.stringify({id, username}))
+          route('/me', true)
+          break;
+        }
+         
+      }
+    }
     console.log('data', e.data);
   }
 
@@ -109,6 +121,11 @@ const Login = () => {
           value={myUUID}
           viewBox={`0 0 256 256`}
         />
+
+        <br />
+        <br />
+
+        <label>{myUUID}</label>
       </div>
     </div>
   )
