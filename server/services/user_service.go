@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+	"log"
 	"qr-login/errs"
 	"qr-login/models"
 	"qr-login/repositories"
@@ -16,6 +18,29 @@ type UserService struct {
 	ws   map[*websocket.Conn]string
 
 	mu sync.Mutex
+}
+
+func (s *UserService) LoginWithUUID(uuid string, userID string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	ws, ok := s.uuid[uuid]
+	if !ok {
+		return errs.NewNotFoundError("")
+	}
+
+	u := s.repo.FindByID(userID)
+	if u == nil {
+		return errs.NewNotFoundError("user not found")
+	}
+
+	err := websocket.Message.Send(ws, fmt.Sprintf("%s:%s|%s", "login", u.ID, u.Username))
+	if err != nil {
+		log.Println(err)
+		return errs.NewUnexpectedError("")
+	}
+
+	return nil
 }
 
 func (s *UserService) DeleteConnByWS(ws *websocket.Conn) {

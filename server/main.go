@@ -22,6 +22,7 @@ func main() {
 	}))
 	e.POST("/user", userHanler.SignUp)
 	e.POST("/login", userHanler.Login)
+	e.POST("/login/uuid", userHanler.LoginWithUUID)
 	e.GET("/ws", userHanler.WS)
 	e.Logger.Fatal(e.Start(":8000"))
 }

@@ -9,6 +9,7 @@ import (
 type User interface {
 	SignUp(string, string) (*models.User, error)
 	Login(string, string) (*models.User, error)
+	LoginWithUUID(string, string) error
 	StoreConn(*websocket.Conn, string)
 	DeleteConnByWS(*websocket.Conn)
 }

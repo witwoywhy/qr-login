@@ -64,6 +64,24 @@ func (h *UserHandler) Login(c echo.Context) error {
 	})
 }
 
+func (h *UserHandler) LoginWithUUID(c echo.Context) error {
+	var dto struct {
+		UUID   string `json:"uuid"`
+		UserID string `json:"userID"`
+	}
+
+	c.Bind(&dto)
+
+	err := h.serv.LoginWithUUID(dto.UUID, dto.UserID)
+	if err != nil {
+		return handleError(c, err)
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{
+		"ok": true,
+	})
+}
+
 func (h *UserHandler) WS(c echo.Context) error {
 	websocket.Handler(func(ws *websocket.Conn) {
 		defer ws.Close()
