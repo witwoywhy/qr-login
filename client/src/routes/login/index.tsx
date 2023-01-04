@@ -2,6 +2,8 @@ import { h } from 'preact';
 import { route } from 'preact-router';
 import { useState } from 'preact/hooks';
 import GetAxios from '../../axios';
+import {v4 as uuid} from "uuid";
+import QRCode from 'react-qr-code';
 
 async function login(username: string, password: string) {
   try {
@@ -32,10 +34,26 @@ async function login(username: string, password: string) {
   }
 }
 
+const myUUID = uuid()
+
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
+
+  const ws = new WebSocket("ws://localhost:8000/ws")
+  ws.onopen = () => {
+    console.log('ws connection opened');
+    ws.send(`login:uuid|${myUUID}`)
+  }
+
+  ws.onclose = () => {
+    console.log('connection closed');
+  }
+
+  ws.onmessage = (e) => {
+    console.log('data', e.data);
+  }
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -82,6 +100,15 @@ const Login = () => {
       </div>
       <div>
         <button type={"submit"} onClick={onSubmit}>Login</button>
+      </div>
+      <br />
+      <div>
+        <QRCode
+          size={256}
+          style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+          value={myUUID}
+          viewBox={`0 0 256 256`}
+        />
       </div>
     </div>
   )
