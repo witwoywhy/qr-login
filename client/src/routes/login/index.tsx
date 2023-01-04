@@ -1,0 +1,11 @@
+import { h } from 'preact';
+
+const Login = () => {
+  return (
+    <div>
+      <h1>Login</h1>
+    </div>
+  )
+}
+
+export default Login

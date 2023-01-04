@@ -7,6 +7,7 @@ import Header from './header';
 import Home from '../routes/home';
 import Profile from '../routes/profile';
 import SignupForm from '../routes/signup';
+import Login from '../routes/login';
 
 const App = () => (
 	<div id="app">
@@ -17,6 +18,7 @@ const App = () => (
 				<Route path="/profile/" component={Profile} user="me" />
 				<Route path="/profile/:user" component={Profile} />
 				<Route path='/signup' component={SignupForm} />
+				<Route path='login' component={Login} />
 			</Router>
 		</main>
 	</div>
