@@ -28,3 +28,25 @@ func NewConflictError(msg string) error {
 		Message: msg,
 	}
 }
+
+func NewNotFoundError(msg string) error {
+	if msg == "" {
+		msg = "not found"
+	}
+
+	return AppError{
+		Code:    http.StatusNotFound,
+		Message: msg,
+	}
+}
+
+func NewUnauthorized(msg string) error{
+	if msg == "" {
+		msg = "authen failed"
+	}
+
+	return AppError{
+		Code: http.StatusUnauthorized,
+		Message: msg,
+	}
+}
