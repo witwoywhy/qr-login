@@ -21,5 +21,6 @@ func main() {
 		AllowMethods: []string{http.MethodPost},
 	}))
 	e.POST("/user", userHanler.SignUp)
+	e.POST("/login", userHanler.Login)
 	e.Logger.Fatal(e.Start(":8000"))
 }

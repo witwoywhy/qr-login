@@ -10,6 +10,19 @@ type UserService struct {
 	repo repositories.User
 }
 
+func (s *UserService) Login(username, password string) (*models.User, error) {
+	u := s.repo.FindByUsername(username)
+	if u == nil {
+		return nil, errs.NewUnauthorized("incorrect username or password")
+	}
+
+	if u.Password != password {
+		return nil, errs.NewUnauthorized("incorrect username or password")
+	}
+
+	return u, nil
+}
+
 func (s *UserService) SignUp(username, password string) (*models.User, error) {
 	u, err := models.NewUser(username, password)
 	if err != nil {
