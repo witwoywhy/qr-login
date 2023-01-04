@@ -24,7 +24,8 @@
     "axios": "^1.2.2",
     "preact": "^10.10.0",
     "preact-render-to-string": "^5.2.1",
-    "preact-router": "^3.2.1"
+    "preact-router": "^3.2.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.12",
