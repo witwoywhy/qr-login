@@ -1,11 +1,42 @@
 import { h } from 'preact';
+import { route } from 'preact-router';
 import { useState } from 'preact/hooks';
+import GetAxios from '../../axios';
+
+async function signup(username: string, password: string): Promise<string> {
+    try {
+        type resp = {
+            data: {
+                ok: boolean,
+                result: {
+                    id: string
+                    username: string
+                }
+            }
+        }
+
+        const res: resp = await GetAxios().post("/user", {username, password})
+        if (res.data.ok) route('/login', true)
+        
+    } catch (error) {
+        type resp = {
+            data: {
+                ok: boolean,
+                error: string
+            }
+        }
+
+        const res: resp = error.response
+        return res.data.error
+    }
+}
 
 const SignUp = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [usernameError, setUsernameError] = useState('')
     const [passwordError, setPasswordError] = useState('')
+    const [signUpError, setSignUpError] = useState('')
 
     const validate = () => {
         let isError = false
@@ -26,15 +57,13 @@ const SignUp = () => {
     const onSubmit = (e) => {
         e.preventDefault()
         
-        const err = validate()
-        if (err) return
-        
-        if (!err) {
-            setUsername('')
-            setPassword('')
-            setUsernameError('')
-            setPasswordError('')
-        }
+        const validateError = validate()
+        if (validateError) return
+
+        signup(username, password).then((err) => {
+            setSignUpError(err)
+            return
+        });
     }
 
     const onChange = (e) => {
@@ -71,6 +100,9 @@ const SignUp = () => {
                         onChange={onChange}
                     />
                     {passwordError && (<div style={{color: 'red'}}>{passwordError}</div>)}
+                </div>
+                <div>
+                    {signUpError && (<div style={{color: 'red'}}>{signUpError}</div>)}
                 </div>
                 <div>
                     <button type={"submit"} onClick={onSubmit}>Sign Up</button>
