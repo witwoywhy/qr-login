@@ -24,9 +24,15 @@ func (h *UserHandler) SignUp(c echo.Context) error {
 		return handleError(c, err)
 	}
 
+	var res struct {
+		ID       string `json:"id"`
+		Username string `json:"username"`
+	}
+	res.ID = u.ID.String()
+	res.Username = u.Username
 	return c.JSON(http.StatusOK, map[string]any{
 		"ok":     true,
-		"result": u,
+		"result": res,
 	})
 
 }
