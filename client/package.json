@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@types/uuid": "^9.0.0",
+    "@yudiel/react-qr-scanner": "^1.0.8",
     "axios": "^1.2.2",
     "preact": "^10.10.0",
     "preact-render-to-string": "^5.2.1",
