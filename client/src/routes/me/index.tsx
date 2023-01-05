@@ -70,7 +70,10 @@ const Me = () => {
       {
         detectMobile() &&  
         <QrScanner
-          onDecode={(result) => setUUID(result)}
+          onDecode={(result) => {
+            setUUID(result)
+            login(uuid, user.id)
+          }}
           onError={(error) => console.log(error?.message)}
         />
       }
